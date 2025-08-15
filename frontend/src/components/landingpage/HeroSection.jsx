@@ -1,8 +1,18 @@
+import { ArrowLeftRight, CloudUpload, MonitorSmartphone } from 'lucide-react'
 import React from 'react'
 
 const HeroSection = () => {
   return (
     <section className="bg-[#f9f7ff] py-12">
+
+      <div className="absolute top-4 left-4">
+        <img 
+          src='/CloudNestLogo.png' 
+          alt="CloudNest Logo" 
+          className="w-20 sm:w-12 md:w-16 lg:w-20 object-contain ml-4"
+        />
+      </div>
+
       <div className="max-w-7xl mx-auto px-6 text-center">
         {/* Top Badge */}
         <div className="inline-block bg-white text-sm text-gray-500 px-4 py-1 rounded-full shadow ">
@@ -42,7 +52,12 @@ const HeroSection = () => {
               <span className="w-3 h-3 bg-gray-300 rounded-full"></span>
             </div>
             {/* Content */}
-            <div className="p-6 text-center px-10">
+            <div className="p-8  text-center px-10 ">
+              <MonitorSmartphone className='inline w-12 h-12 mr-4'/>
+              <ArrowLeftRight className='inline mr-4'/>
+              <span className='text-purple-500'><CloudUpload className='inline w-12 h-12 '/></span>
+            </div>
+            <div className="p-2 text-center px-10">
               <h3 className="font-bold text-xl">Welcome to CloudNest</h3>
               <p className="text-gray-500 mt-2 text-m">
                 Everything you need for the file sharing
