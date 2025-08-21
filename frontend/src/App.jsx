@@ -7,17 +7,23 @@ import MyFiles from './pages/MyFiles'
 import UploadFiles from './pages/UploadFiles'
 import Subscription from './pages/Subscription'
 import Transaction from './pages/Transaction'
+import { RedirectToSignIn, SignedIn, SignedOut } from "@clerk/clerk-react";
 
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/dashboard" element={
+          <>
+            <SignedIn><Dashboard/></SignedIn>
+            <SignedOut><RedirectToSignIn/></SignedOut>
+          </>
+        } />
         <Route path='/myfiles' element={<MyFiles/>}/>
         <Route path='/upload' element={<UploadFiles/>}/>
         <Route path='/subscription' element={<Subscription/>}/>
-        <Route path='/transaction' element={<Transaction/>}/> 
+        <Route path='/transactions' element={<Transaction/>}/> 
       </Routes>
     </BrowserRouter>
   );

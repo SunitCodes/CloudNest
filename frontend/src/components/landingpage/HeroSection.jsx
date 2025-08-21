@@ -1,7 +1,7 @@
 import { ArrowLeftRight, CloudUpload, MonitorSmartphone } from 'lucide-react'
 import React from 'react'
 
-const HeroSection = () => {
+const HeroSection = ({openSignIn, openSignUp}) => {
   return (
     <section className="bg-[#f9f7ff] py-12">
 
@@ -32,10 +32,14 @@ const HeroSection = () => {
 
         {/* CTA Buttons */}
         <div className="mt-6 flex flex-col sm:flex-row justify-center gap-4">
-          <button className="bg-purple-500 hover:bg-purple-600 text-white font-medium px-6 py-3 rounded-full cursor-pointer">
+          <button
+            onClick={() => openSignUp()} 
+            className="bg-purple-500 hover:bg-purple-600 text-white font-medium px-6 py-3 rounded-full cursor-pointer">
             Get Started
           </button>
-          <button className="bg-white border border-gray-300 hover:bg-gray-100 text-gray-700 font-medium px-6 py-3 rounded-full cursor-pointer">
+          <button
+            onClick={() => openSignIn()} 
+            className="bg-white border border-gray-300 hover:bg-gray-100 text-gray-700 font-medium px-6 py-3 rounded-full cursor-pointer">
             Sign In
           </button>
         </div>
