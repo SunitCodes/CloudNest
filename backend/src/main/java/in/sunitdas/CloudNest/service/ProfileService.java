@@ -78,4 +78,12 @@ public class ProfileService {
 
     }
 
+    public void deleteProfile(String clerkId){
+       ProfileDocument existingProfile = profileRepository.findByClerkId(clerkId);
+       if(existingProfile != null){
+           profileRepository.delete(existingProfile);
+       }
+
+    }
+
 }
