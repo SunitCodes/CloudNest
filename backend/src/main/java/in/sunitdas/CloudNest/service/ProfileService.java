@@ -4,6 +4,8 @@ import in.sunitdas.CloudNest.document.ProfileDocument;
 import in.sunitdas.CloudNest.dto.ProfileDTO;
 import in.sunitdas.CloudNest.repository.ProfileRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -85,5 +87,19 @@ public class ProfileService {
        }
 
     }
+
+
+    public ProfileDocument getCurrentProfile() {
+        // Check if there is currently an authenticated user
+        if (SecurityContextHolder.getContext().getAuthentication() == null) {
+            // If no authentication, throw an exception
+            throw new UsernameNotFoundException("User not authenticated");
+        }
+        // Get the username (or clerkId) of the authenticated user
+        String clerkId = SecurityContextHolder.getContext().getAuthentication().getName();
+        // Return the profile document associated with the clerkId
+        return profileRepository.findByClerkId(clerkId);
+    }
+
 
 }
