@@ -46,7 +46,7 @@ const Navbar = ({activeMenu}) => {
           <Link to="/subscription">
             <CreditsDisplay credits={5}/>
           </Link>
-          <div className="relative">
+          <div className="relative pt-2">
             <UserButton/>
           </div>
         </div>

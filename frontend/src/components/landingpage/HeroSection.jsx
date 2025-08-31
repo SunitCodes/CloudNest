@@ -51,9 +51,9 @@ const HeroSection = ({openSignIn, openSignUp}) => {
           <div className="bg-white shadow-lg rounded-2xl overflow-hidden max-w-m mx-auto">
             {/* 3 dots */}
             <div className="flex items-center space-x-2 px-4 py-4 bg-gray-50">
-              <span className="w-3 h-3 bg-gray-300 rounded-full"></span>
-              <span className="w-3 h-3 bg-gray-300 rounded-full"></span>
-              <span className="w-3 h-3 bg-gray-300 rounded-full"></span>
+              <span className="w-3 h-3 bg-red-400 rounded-full"></span>
+              <span className="w-3 h-3 bg-yellow-400 rounded-full"></span>
+              <span className="w-3 h-3 bg-green-400 rounded-full"></span>
             </div>
             {/* Content */}
             <div className="p-8  text-center px-10 ">
@@ -67,47 +67,60 @@ const HeroSection = ({openSignIn, openSignUp}) => {
                 Everything you need for the file sharing
               </p>
               <p className="text-gray-500 mt-2 text-sm">
-                CloudNest povides all the tools you need to manage your digital content
+                CloudNest povides all the tools you need to manage your digital content. <br/>
+                Create a free CloudNest account today.
               </p>
             </div>
           </div>
 
            {/* Right Box */}
-          <div className="bg-white shadow-lg rounded-2xl overflow-hidden max-w-m mx-auto">
+          <div className="bg-white shadow-lg rounded-2xl overflow-hidden max-w-2xl mx-auto">
             {/* 3 dots */}
             <div className="flex items-center space-x-2 px-4 py-4 bg-gray-50">
-              <span className="w-3 h-3 bg-gray-300 rounded-full"></span>
-              <span className="w-3 h-3 bg-gray-300 rounded-full"></span>
-              <span className="w-3 h-3 bg-gray-300 rounded-full"></span>
+              <span className="w-3 h-3 bg-red-400 rounded-full"></span>
+              <span className="w-3 h-3 bg-yellow-400 rounded-full"></span>
+              <span className="w-3 h-3 bg-green-400 rounded-full"></span>
             </div>
+
             {/* Content */}
-            <div className="p-6">
-              <h3 className="font-semibold text-lg text-purple-600">Virries</h3>
-              <input
-                type="text"
-                placeholder="Search by resource name or public IP"
-                className="mt-2 w-full border rounded-lg px-3 py-2 text-sm"
-              />
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
-                <div className="bg-blue-100 p-4 rounded-lg">
-                  <p className="font-medium">Small package</p>
-                  <p className="text-sm text-gray-600">Processor: 4 Cores</p>
-                  <p className="text-sm text-gray-600">GPU: 16 GB</p>
-                  <p className="text-sm text-gray-600">RAM: 16 GB</p>
+            <div className="p-8 text-center relative">
+              {/* Heading */}
+              <h2 className="text-2xl font-semibold text-purple-700">
+                Simple way
+              </h2>
+              <h3 className="text-xl font-medium text-gray-800 mt-1">
+                to manage & acces your files
+              </h3>
+              <p className="text-sm text-gray-500 mt-3 max-w-md mx-auto">
+                CloudNest gives you secure access to all of your files. Manage your files easily & 
+                collaborate with friends, family from any device. 
+              </p>
+
+              {/* Decorative arcs */}
+              <div className="absolute inset-0 flex justify-center items-center pointer-events-none">
+                <div className="w-[85%] h-[85%] border-t-2 border-dotted border-blue-200 rounded-full absolute"></div>
+                <div className="w-[95%] h-[95%] border-t-2 border-dotted border-blue-300 rounded-full absolute"></div>
+              </div>
+
+              {/* Floating files */}
+              <div className="relative flex justify-center gap-8 mt-4 ">
+                <div className="bg-white shadow-md rounded-md px-3 py-6 w-20 rotate-[-8deg]">
+                  <div className="h-2 w-8 bg-blue-400 rounded mb-2"></div>
+                  <div className="h-2 w-10 bg-gray-300 rounded mb-2"></div>
+                  <div className="h-2 w-7 bg-gray-300 rounded"></div>
                 </div>
-                <div className="bg-purple-100 p-4 rounded-lg">
-                  <p className="font-medium">Medium package</p>
-                  <p className="text-sm text-gray-600">Processor: 16 Cores</p>
-                  <p className="text-sm text-gray-600">GPU: 16 GB</p>
-                  <p className="text-sm text-gray-600">RAM: 64 GB</p>
+                <div className="bg-white shadow-md rounded-md px-3 py-6 w-20 rotate-[5deg]">
+                  <div className="h-2 w-8 bg-purple-400 rounded mb-2"></div>
+                  <div className="h-2 w-10 bg-gray-300 rounded mb-2"></div>
+                  <div className="h-2 w-7 bg-gray-300 rounded"></div>
                 </div>
-                <div className="bg-indigo-900 text-white p-4 rounded-lg">
-                  <p className="font-medium">Large package</p>
-                  <p className="text-sm">Processor: 48 Cores</p>
-                  <p className="text-sm">GPU: 4*16 GB</p>
-                  <p className="text-sm">RAM: 192 GB</p>
+                <div className="bg-white shadow-md rounded-md px-3 py-6 w-20 rotate-[10deg]">
+                  <div className="h-2 w-10 bg-orange-400 rounded mb-2"></div>
+                  <div className="h-2 w-7 bg-gray-300 rounded mb-2"></div>
+                  <div className="h-2 w-12 bg-gray-300 rounded"></div>
                 </div>
-              </div>          
+              </div> 
+
             </div>
           </div>
         </div>
