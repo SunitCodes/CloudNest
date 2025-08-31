@@ -107,5 +107,39 @@ public class FileMetaDataService {
         return mapToDTO(document);
     }
 
+    public FileMetaDataDTO getDownloadableFile(String id){
+        FileMetaDataDocument file = fileMetaDataRepository.findById(id).orElseThrow(() -> new RuntimeException("File not found"));
+        return mapToDTO(file);
+    }
+
+
+    public void deleteFile(String id) {
+        try {
+            ProfileDocument currentProfile = profileService.getCurrentProfile();
+            // Retrieve the file metadata using the provided file ID, or throw if not found
+            FileMetaDataDocument file = fileMetaDataRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("File not found"));
+            // Check if file belongs to the current user's clerk ID; throw exception if not
+            if (!file.getClerkId().equals(currentProfile.getClerkId())) {
+                throw new RuntimeException("File is not belong to current user");
+            }
+            // Get the file path and delete the file if it exists
+            Path filePath = Paths.get(file.getFileLocation());
+            Files.deleteIfExists(filePath);
+            // Delete the file metadata from the repository
+            fileMetaDataRepository.deleteById(id);
+        } catch (Exception e) {
+            throw new RuntimeException("Error deleting the file");
+        }
+    }
+
+
+    public FileMetaDataDTO togglePublic(String id){
+        FileMetaDataDocument file = fileMetaDataRepository.findById(id)
+                .orElseThrow(()-> new RuntimeException("file not found"));
+        file.setIsPublic(!file.getIsPublic());
+        fileMetaDataRepository.save(file);
+        return mapToDTO(file);
+    }
 
 }
