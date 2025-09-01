@@ -8,10 +8,13 @@ import UploadFiles from './pages/UploadFiles'
 import Subscription from './pages/Subscription'
 import Transaction from './pages/Transaction'
 import { RedirectToSignIn, SignedIn, SignedOut } from "@clerk/clerk-react";
+import { Toaster } from "react-hot-toast";
 
 export default function App() {
   return (
     <BrowserRouter>
+
+      <Toaster/>
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/dashboard" element={
