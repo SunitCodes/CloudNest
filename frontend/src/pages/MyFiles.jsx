@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import DashboardLayout from '../layout/DashboardLayout'
-import { Copy, Download, Eye, File, Globe, Grid, List, Lock, Trash2 } from 'lucide-react'
+import { Copy, Download, Eye, File, FileIcon, FileText, Globe, Grid, Image, List, Lock, Music, Trash2, Video } from 'lucide-react'
 import { useAuth } from '@clerk/clerk-react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import FileCard from '../components/FileCard';
+import { apiEndpoints } from '../utils/apiEndpoints';
+import ConfirmationDialog from '../components/ConfirmationDialog'
 
 
 const MyFiles = () => {
@@ -14,21 +16,114 @@ const MyFiles = () => {
   const [viewMode, setViewMode] = useState("list");
   const { getToken } = useAuth();
   const navigate = useNavigate();
+  const [deleteConfirmation, setDeleteConfirmation] = useState([]);
+
+  
+  // fetching files for the logged in user
   const fetchFiles = async () => {
     try {
       const token = await getToken();
       const response = await axios.get(
-        'http://localhost:8080/files/my',
+        apiEndpoints.FETCH_FILES,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       if (response.status === 200) {
         setFiles(response.data);
       }
     } catch (error) {
-      console.log('Error fetching the files from server: ', error);
+      console.error('Error fetching the files from server: ', error);
       toast.error('Error fetching files from the server: ', error.message);
     }
   };
+
+  // toggle private/public view
+  const togglePublic = async (fileToUpdate) => {
+    try{
+      const token = await getToken();
+      await axios.patch(apiEndpoints.TOGGLE_FILE(fileToUpdate.id), {}, {headers: { Authorization: `Bearer ${token}`}})
+      setFiles(files.map((file) => file.id === fileToUpdate.id ? {...file, isPublic: !file.isPublic} : file ));
+    }catch(error){
+      console.error('Error toggling file status: ',error);
+      toast.error('Error toggling files status: ', error.message);
+    }
+  }
+
+  // download file
+  const downloadFile = async (file) => {
+    try {
+      const token = await getToken();
+      const response = await axios.get(apiEndpoints.DOWNLOAD_FILE(file.id), {headers: { Authorization: `Bearer ${token}`}, responseType: "blob"});
+
+      // create a blob url and trigger download
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", file.name);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url); // clean up the object url
+
+    } catch (error) {
+      console.error('Error downloading file: ',error);
+      toast.error('Error downloading file ', error.message);
+    }
+  }
+
+  // close modal
+  const closeDeleteConfirmation = () => {
+    setDeleteConfirmation({
+      isOpen: false,
+      fileId: null
+    })
+  }
+
+  // open modal
+  const openDeleteConfirmation = (fileId) => {
+    setDeleteConfirmation({
+      isOpen: true,
+      fileId
+    })
+  }
+
+  const getFileIcon = (file) => {
+        const extension = file.name.split('.').pop().toLowerCase();
+
+        if (['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'].includes(extension)) {
+        return <Image size={24} className="text-purple-500" />;
+        }
+        if (['mp4', 'webm', 'mov', 'avi', 'mkv'].includes(extension)) {
+        return <Video size={24} className="text-blue-500" />;
+        }
+        if (['mp3', 'wav', 'ogg', 'flac', 'm4a'].includes(extension)) {
+        return <Music size={24} className="text-green-500" />;
+        }
+        if (['pdf', 'doc', 'docx', 'txt', 'rtf'].includes(extension)) {
+        return <FileText size={24} className="text-amber-500" />;
+        }
+        return <FileIcon size={24} className="text-purple-500" />;
+  };
+
+  // delete a file after confirmation
+  const handleDelete = async () => {
+    const fileId = deleteConfirmation.fileId;
+    if(!fileId) return;
+
+    try {
+      const token = await getToken();
+      const response = await axios.delete(apiEndpoints.DELETE_FILE(fileId), {headers: {Authorization: `Bearer ${token}`}});
+      if(response.status === 204){
+        setFiles(files.filter((file) => file.id !== fileId ))
+        closeDeleteConfirmation();
+      }else{
+        toast.error('Error deleting the file')
+      }
+    } catch (error) {
+      console.error('Error deleting file: ',error);
+      toast.error('Error deleting file ', error.message);
+    }
+
+  }
 
   useEffect( ()=> {
     fetchFiles();
@@ -109,7 +204,7 @@ const MyFiles = () => {
                     <tr key={file.id} className="hover:bg-gray-50 transition-colors">
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
                         <div className="flex items-center gap-2">
-                          <File size={20} className="text-blue-600" />
+                          {getFileIcon(file)}
                           {file.name}
                         </div>
                       </td>
@@ -123,7 +218,9 @@ const MyFiles = () => {
 
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                         <div className="flex items-center gap-4">
-                          <button className="flex items-center gap-2 cursor-pointer group">
+                          <button 
+                            onClick={() => togglePublic(file)}
+                            className="flex items-center gap-2 cursor-pointer group">
                             {file.isPublic ? (
                               <>
                                 <Globe size={16} className="text-green-500" />
@@ -158,6 +255,7 @@ const MyFiles = () => {
                           {/* Download Button */}
                           <div className="flex justify-center">
                             <button
+                              onClick={() => downloadFile(file)}
                               title="Download" className="text-gray-500 hover:text-green-600">
                               <Download size={18} />
                             </button>
@@ -165,6 +263,7 @@ const MyFiles = () => {
                           {/* Delete Button */}
                           <div className="flex justify-center">
                             <button
+                              onClick={() => openDeleteConfirmation(file.id)}
                               title="Delete" className="text-gray-500 hover:text-red-600">
                               <Trash2 size={18} />
                             </button>
@@ -172,9 +271,9 @@ const MyFiles = () => {
                           {/* View Link if public */}
                           <div className="flex justify-center">
                             {file.isPublic ? (
-                              <Link to={`/file/${file.id}`} className="text-gray-500 hover:text-blue-600">
+                              <a href={`/file/${file.id}`} title='View File' target='_blank' rel='noreferrer' className="text-gray-500 hover:text-blue-600">
                                 <Eye size={18} />
-                              </Link>
+                              </a>
                             ) : (
                               <span className="w-[18px]"></span>
                             )}
@@ -191,6 +290,19 @@ const MyFiles = () => {
             </div>
         )}
 
+        {/* Delete Confirmation Dialog */}
+        <ConfirmationDialog
+          isOpen={deleteConfirmation.isOpen}
+          onClose={closeDeleteConfirmation}
+          title="Delete File"
+          message="Are you sure want to delete this file? This action cannot be undone."
+          confirmText="Delete"
+          cancelText="Cancel"
+          confirmationButtonClass="bg-red-600 hover:bg-red-700"
+          onConfirm={handleDelete}
+        />
+
+      
       </div>
     </DashboardLayout>
   )

@@ -1,11 +1,11 @@
-import { FileIcon, FileText, Globe, Image, Lock, Music, Video } from 'lucide-react';
+import { Copy, Download, Eye, FileIcon, FileText, Globe, Image, Lock, Music, Video, Trash2 } from 'lucide-react';
 import React, { useState } from 'react'
 
 const FileCard = ({file}) => {
 
     const [showAction, setShowAction] = useState();
 
-    const getFileIcon = () => {
+    const getFileIcon = (file) => {
         const extension = file.name.split('.').pop().toLowerCase();
 
         if (['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'].includes(extension)) {
@@ -46,7 +46,7 @@ const FileCard = ({file}) => {
         >
         {/* File preview area */}
         <div className="h-32 bg-gradient-to-br from-purple-50 to-indigo-50 flex items-center justify-center p-4">
-            {getFileIcon()}
+            {getFileIcon(file)}
         </div>
 
         {/* Public/private badge */}
@@ -77,6 +77,54 @@ const FileCard = ({file}) => {
                     {formatFileSize(file.size)} | {formatDate(file.uploadedAt)}
                     </p>
                 </div>
+            </div>
+        </div>
+
+        {/* Action Button */}
+        <div className={`absolute inset-0 bg-gradient-to-t from-black/30 via-black/10 to-transparent flex items-end justify-center p-4 transition-opacity duration-300 ${showAction ? 'opacity-100':'opacity-0'}`}>
+            <div className="flex gap-3 w-full justify-end">
+                {file.isPublic && (
+                    <button
+                    title="Share Link"
+                    className="p-2 bg-white rounded-full hover:bg-white transition-colors text-purple-500 hover:text-purple-600 hover:cursor-pointer"
+                    >
+                    <Copy size={18} />
+                    </button>
+                )}
+
+                {file.isPublic && (
+                    <a
+                        href={`/file/${file.id}`}
+                        title="View File"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="p-2 bg-white rounded-full hover:bg-white transition-colors text-gray-700 hover:text-gray-900 hover:cursor-pointer"
+                    >
+                        <Eye size={18} />
+                    </a>
+                )}
+
+                <button
+                    title="Download"
+                    className="p-2 bg-white rounded-full hover:bg-white transition-colors text-green-600 hover:text-green-700 hover:cursor-pointer"
+                    >
+                    <Download size={18} />
+                </button>
+
+                <button
+                    title={file.isPublic ? "Make Private" : "Make Public"}
+                    className="p-2 bg-white rounded-full hover:bg-white transition-colors text-amber-600 hover:text-amber-700 hover:cursor-pointer"
+                    >
+                    {file.isPublic ? <Lock size={18} /> : <Globe size={18} />}
+                </button>
+
+                <button
+                    title="Delete"
+                    className="p-2 bg-white rounded-full hover:bg-white transition-colors text-red-600 hover:text-red-700 hover:cursor-pointer"
+                    >
+                    <Trash2 size={18} />
+                </button>
+
             </div>
         </div>
     </div>
