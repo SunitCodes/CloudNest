@@ -1,7 +1,7 @@
 import { Copy, Download, Eye, FileIcon, FileText, Globe, Image, Lock, Music, Video, Trash2 } from 'lucide-react';
 import React, { useState } from 'react'
 
-const FileCard = ({file}) => {
+const FileCard = ({file, onDelete, onTogglePublic, onDownload, onShareLink}) => {
 
     const [showAction, setShowAction] = useState();
 
@@ -85,6 +85,7 @@ const FileCard = ({file}) => {
             <div className="flex gap-3 w-full justify-end">
                 {file.isPublic && (
                     <button
+                    onClick={() => onShareLink(file.id)}
                     title="Share Link"
                     className="p-2 bg-white rounded-full hover:bg-white transition-colors text-purple-500 hover:text-purple-600 hover:cursor-pointer"
                     >
@@ -105,6 +106,7 @@ const FileCard = ({file}) => {
                 )}
 
                 <button
+                    onClick={() => onDownload(file)}
                     title="Download"
                     className="p-2 bg-white rounded-full hover:bg-white transition-colors text-green-600 hover:text-green-700 hover:cursor-pointer"
                     >
@@ -112,6 +114,7 @@ const FileCard = ({file}) => {
                 </button>
 
                 <button
+                    onClick={() => onTogglePublic(file)}
                     title={file.isPublic ? "Make Private" : "Make Public"}
                     className="p-2 bg-white rounded-full hover:bg-white transition-colors text-amber-600 hover:text-amber-700 hover:cursor-pointer"
                     >
@@ -119,6 +122,7 @@ const FileCard = ({file}) => {
                 </button>
 
                 <button
+                    onClick={() => onDelete(file.id)}
                     title="Delete"
                     className="p-2 bg-white rounded-full hover:bg-white transition-colors text-red-600 hover:text-red-700 hover:cursor-pointer"
                     >

@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import FileCard from '../components/FileCard';
 import { apiEndpoints } from '../utils/apiEndpoints';
 import ConfirmationDialog from '../components/ConfirmationDialog'
+import LinkShareModal from '../components/LinkShareModal';
 
 
 const MyFiles = () => {
@@ -17,6 +18,11 @@ const MyFiles = () => {
   const { getToken } = useAuth();
   const navigate = useNavigate();
   const [deleteConfirmation, setDeleteConfirmation] = useState([]);
+  const [shareModal, setShareModal] = useState({
+    isOpen: false,
+    fileId: null,
+    link: ""
+  });
 
   
   // fetching files for the logged in user
@@ -125,6 +131,25 @@ const MyFiles = () => {
 
   }
 
+  // open share Modal
+  const openShareModal = (fileId) => {
+    const link = `${window.location.origin}/file/${fileId}`
+    setShareModal({
+      isOpen: true,
+      fileId,
+      link
+    })
+  }
+
+  // delete share Modal
+  const closeShareModal = () => {
+    setShareModal({
+      isOpen: false,
+      fileId: null,
+      link: ""
+    })
+  }
+
   useEffect( ()=> {
     fetchFiles();
   }, [getToken])
@@ -183,6 +208,10 @@ const MyFiles = () => {
               <FileCard
                 key={file.id}
                 file={file}
+                onDelete={openDeleteConfirmation}
+                onTogglePublic={togglePublic}
+                onDownload={downloadFile}
+                onShareLink={openShareModal}
               />
             ))}
           </div>
@@ -239,6 +268,7 @@ const MyFiles = () => {
                           </button>
                           {file.isPublic && (
                             <button
+                              onClick={ ()=> openShareModal(file.id)}
                               className="flex items-center gap-2 cursor-pointer group text-blue-600"
                             >
                               <Copy size={16} />
@@ -256,7 +286,7 @@ const MyFiles = () => {
                           <div className="flex justify-center">
                             <button
                               onClick={() => downloadFile(file)}
-                              title="Download" className="text-gray-500 hover:text-green-600">
+                              title="Download" className="text-gray-500 hover:text-green-600 cursor-pointer">
                               <Download size={18} />
                             </button>
                           </div>
@@ -264,7 +294,7 @@ const MyFiles = () => {
                           <div className="flex justify-center">
                             <button
                               onClick={() => openDeleteConfirmation(file.id)}
-                              title="Delete" className="text-gray-500 hover:text-red-600">
+                              title="Delete" className="text-gray-500 hover:text-red-600 cursor-pointer">
                               <Trash2 size={18} />
                             </button>
                           </div>
@@ -302,7 +332,14 @@ const MyFiles = () => {
           onConfirm={handleDelete}
         />
 
-      
+        {/* Link share Modal  */}
+        <LinkShareModal
+          isOpen={shareModal.isOpen}
+          onClose={closeShareModal}
+          link={shareModal.link}
+          title="Share File"
+        />
+
       </div>
     </DashboardLayout>
   )
