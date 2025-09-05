@@ -9,25 +9,27 @@ import Subscription from './pages/Subscription'
 import Transaction from './pages/Transaction'
 import { RedirectToSignIn, SignedIn, SignedOut } from "@clerk/clerk-react";
 import { Toaster } from "react-hot-toast";
+import { UserCreditsProvider } from "./context/UserCreditsContext";
 
 export default function App() {
   return (
-    <BrowserRouter>
-
-      <Toaster/>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/dashboard" element={
-          <>
-            <SignedIn><Dashboard/></SignedIn>
-            <SignedOut><RedirectToSignIn/></SignedOut>
-          </>
-        } />
-        <Route path='/myfiles' element={<MyFiles/>}/>
-        <Route path='/upload' element={<UploadFiles/>}/>
-        <Route path='/subscription' element={<Subscription/>}/>
-        <Route path='/transactions' element={<Transaction/>}/> 
-      </Routes>
-    </BrowserRouter>
+    <UserCreditsProvider>
+      <BrowserRouter>
+        <Toaster/>
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/dashboard" element={
+            <>
+              <SignedIn><Dashboard/></SignedIn>
+              <SignedOut><RedirectToSignIn/></SignedOut>
+            </>
+          } />
+          <Route path='/myfiles' element={<MyFiles/>}/>
+          <Route path='/upload' element={<UploadFiles/>}/>
+          <Route path='/subscription' element={<Subscription/>}/>
+          <Route path='/transactions' element={<Transaction/>}/> 
+        </Routes>
+      </BrowserRouter>
+    </UserCreditsProvider>
   );
 }

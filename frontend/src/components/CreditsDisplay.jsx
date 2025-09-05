@@ -5,7 +5,7 @@ const CreditsDisplay = ({ credits }) => {
     <div className="flex items-center gap-1 bg-blue-50 px-3 py-1.5 rounded-full text-blue-700">
       <CreditCard size={16} />
       <span className="font-bold">{credits}</span>
-      <span className="text-xs font-semibold">Credits</span>
+      <span className="text-xs font-semibold pt-1">Credits</span>
     </div>
   );
 };
